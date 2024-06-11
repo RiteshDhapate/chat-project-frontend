@@ -10,6 +10,7 @@ import { useShowHideContext } from "@/utils/providers/sideBarToogleProvider";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { getUserDetail } from "@/utils/functions/getUserDetails";
+import { ThemeToogleMode } from "./ui/ThemeToogleMode";
 
 const SideBar = () => {
   const { showHide, setShowHide } = useShowHideContext();
@@ -74,6 +75,15 @@ const SideBar = () => {
                     </Link>
                   </motion.div>
                 ))}
+                <motion.div  variants={mobileLinkVars}>
+                  
+                <div
+                  className={`flex justify-start items-center gap-5 pl-10 py-5 h-8  text-xl mt-5 rounded-full
+                    }`}
+                    >
+                  <ThemeToogleMode/>
+                </div>
+                  </motion.div>
               </motion.div>
             </div>
             {user && (
