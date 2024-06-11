@@ -1,7 +1,10 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
+import { ThemeProvider } from "@/components/ui/theme-provider";
+import NextTopLoader from "nextjs-toploader";
+import { Toaster } from "@/components/ui/toaster";
+import { ShowHideProvider } from "@/utils/providers/sideBarToogleProvider";
+import { SocketProvider } from "@/utils/context/socket";
 
 export const metadata = {
   title: "Create Next App",
@@ -11,7 +14,25 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <SocketProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <NextTopLoader
+              shadow="27px 27px 55px #b7aeae,
+            -27px -27px 55px #d7cccc"
+              showSpinner={true}
+              color="hsl(346.8 77.2% 49.8%)"
+            />
+            <ShowHideProvider>{children}</ShowHideProvider>
+            <Toaster />
+          </ThemeProvider>
+        </SocketProvider>
+      </body>
     </html>
   );
 }
