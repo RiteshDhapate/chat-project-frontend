@@ -1,4 +1,5 @@
 "use client";
+
 import AuthNavbar from "@/components/AuthNavbar";
 import Otp from "@/components/Otp";
 import { Button } from "@/components/ui/button";
@@ -7,17 +8,17 @@ import { otpVerification } from "@/utils/functions/otpVerification";
 import { resendOtp } from "@/utils/functions/resendOtp";
 import { Loader } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
-const page = () => {
+const Demo = () => {
   // states
   const [otp, setOtp] = useState();
   const [error, setError] = useState("");
   const [loding, setLoding] = useState(false);
   const [reSendLoding, setReSendLoding] = useState(false);
   const { toast } = useToast();
-  const route = useRouter();
   const queryParams = useSearchParams();
+  const route = useRouter();
 
   // handle login function
   const handleSubmit = async (e) => {
@@ -26,16 +27,19 @@ const page = () => {
     const storedOtp = localStorage.getItem("OData");
     const queryType = queryParams.get("type");
 
-
     // checks
     if (!storedOtp) {
       toast({
         title: "OTP is expired. please click on resend otp !",
       });
+      setLoding(false);
+      return;
     } else if (storedOtp !== otp) {
       toast({
         title: "OTP not match !",
       });
+      setLoding(false);
+      return;
     }
 
     await otpVerification(otp, queryType, setError, toast, route);
@@ -46,13 +50,12 @@ const page = () => {
   // handle resend otp event
   const handleResendOtp = async () => {
     setReSendLoding(true);
-    await resendOtp(setError,toast);
+    await resendOtp(setError, toast);
     setReSendLoding(false);
-  }
-
+  };
 
   useEffect(() => {
-    if (!localStorage.getItem('token')) {
+    if (!localStorage.getItem("token")) {
       route.push("/login");
     }
   }, []);
@@ -83,7 +86,7 @@ const page = () => {
                 <form onSubmit={(e) => handleSubmit(e)}>
                   <div>
                     <div className="w-full flex justify-center items-center">
-                      <Otp setOtp={setOtp}/>
+                      <Otp setOtp={setOtp} />
                     </div>
                   </div>
                   <div className="mt-4 flex items-center justify-between gap-x-2">
@@ -118,6 +121,16 @@ const page = () => {
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+const page = () => {
+  return (
+    <div>
+      <Suspense fallback={() => <h1>loding....</h1>}>
+        <Demo />
+      </Suspense>
     </div>
   );
 };
