@@ -5,7 +5,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { containerVars, menuVars, mobileLinkVars } from "@/utils/variants";
 import { links } from "@/utils/links";
-import { CircleX } from "lucide-react";
+import { CircleX, LogOut } from "lucide-react";
 import { useShowHideContext } from "@/utils/providers/sideBarToogleProvider";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
@@ -26,6 +26,12 @@ const SideBar = () => {
   useEffect(() => {
     getUserInfo();
   }, []);
+
+  const handleLogout = () => { 
+    localStorage.removeItem("token");
+    route.push("/login");
+  };
+
   return (
     showHide && (
       <div className=" z-50 bg-white dark:bg-[#121212] fixed top-0 left-0 md:relative h-screen ">
@@ -75,15 +81,14 @@ const SideBar = () => {
                     </Link>
                   </motion.div>
                 ))}
-                <motion.div  variants={mobileLinkVars}>
-                  
-                <div
-                  className={`flex justify-start items-center gap-5 pl-10 py-5 h-8  text-xl mt-5 rounded-full
+                <motion.div variants={mobileLinkVars}>
+                  <div
+                    className={`flex justify-start items-center gap-5 pl-10 py-5 h-8  text-xl mt-5 rounded-full
                     }`}
-                    >
-                  <ThemeToogleMode/>
-                </div>
-                  </motion.div>
+                  >
+                    <ThemeToogleMode />
+                  </div>
+                </motion.div>
               </motion.div>
             </div>
             {user && (
@@ -98,21 +103,26 @@ const SideBar = () => {
                   delay: 0.6,
                   duration: 0.3,
                 }}
-                className="mb-5 w-full bg-primary rounded-full flex gap-2 items-center pl-5 shadow-lg shadow-gray-600 dark:shadow-black"
+                className="mb-5 w-full bg-primary rounded-full flex justify-evenly items-center pl-5 shadow-lg shadow-gray-600 dark:shadow-black"
               >
-                <div>
-                  <Image
-                    width={50}
-                    height={50}
-                    src={user?.profileImage}
-                    className="w-[40px] h-[40px] rounded-full shadow-lg shadow-zinc-900"
-                  />
-                </div>
-                <div className="flex flex-col ">
-                  <h1 className="font-semibold text-lg text-gray-100">
-                    {user?.userName}
-                  </h1>
-                  <p className="text-[12px] text-gray-400">{user?.email}</p>
+                <div className="flex gap-2 ">
+                  <div>
+                    <Image
+                      width={50}
+                      height={50}
+                      src={user?.profileImage}
+                      className="w-[40px] h-[40px] rounded-full shadow-lg shadow-zinc-900"
+                    />
+                  </div>
+                  <div className="flex flex-col ">
+                    <h1 className="font-semibold text-lg text-gray-100">
+                      {user?.userName}
+                    </h1>
+                    <p className="text-[12px] text-gray-400">{user?.email}</p>
+                  </div>
+                  <div className="flex items-center">
+                    <LogOut className="cursor-pointer text-white dark:text-black hover:text-black dark:hover:text-black font-semibold" onClick={handleLogout}/>
+                  </div>
                 </div>
               </motion.div>
             )}
